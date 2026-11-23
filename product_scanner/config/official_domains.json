@@ -1,0 +1,42 @@
+{
+  "benetton.co.in": {
+    "brand": "United Colors of Benetton",
+    "verified_via": "email_domain",
+    "timestamp": "2026-11-23T00:32:12.152351"
+  },
+  "in.benetton.com": {
+    "brand": "United Colors of Benetton",
+    "verified_via": "web_search_validated",
+    "timestamp": "2026-11-21T16:33:45.221970"
+  },
+  "jackjones.in": {
+    "brand": "JACK & JONES",
+    "verified_via": "web_search_validated",
+    "timestamp": "2026-11-21T16:33:57.492228"
+  },
+  "uspoloassn.in": {
+    "brand": "U.S. Polo Assn.",
+    "verified_via": "curated_official_store",
+    "timestamp": "2026-11-23T00:38:00"
+  },
+  "flyingmachine.co.in": {
+    "brand": "Flying Machine",
+    "verified_via": "curated_official_store",
+    "timestamp": "2026-11-23T00:38:00"
+  },
+  "arrow.in": {
+    "brand": "Arrow",
+    "verified_via": "curated_official_store",
+    "timestamp": "2026-11-23T00:38:00"
+  },
+  "levi.in": {
+    "brand": "Levi's",
+    "verified_via": "curated_official_store",
+    "timestamp": "2026-11-23T00:38:00"
+  },
+  "tommyhilfiger.in": {
+    "brand": "Tommy Hilfiger",
+    "verified_via": "curated_official_store",
+    "timestamp": "2026-11-23T00:38:00"
+  }
+}
