@@ -92,6 +92,10 @@ class SearchService:
         if not results and settings.has_brave_key:
             results = cls._search_brave_web(query, num_results)
 
+        # 3. Try Tavily Web Search (if no results or key not set)
+        if not results and settings.has_tavily_key:
+            results = cls._search_tavily_web(query, num_results, domain_filter=domain_filter)
+
         # Post-filter if domain_filter is requested
         if domain_filter:
             results = [r for r in results if domain_filter.lower() in (r.get("domain") or "").lower()]
@@ -179,6 +183,8 @@ class SearchService:
             results = cls._search_serper_images(query, num_results)
         if not results and settings.has_brave_key:
             results = cls._search_brave_images(query, num_results)
+        if not results and settings.has_tavily_key:
+            results = cls._search_tavily_images(query, num_results)
 
         cls._search_cache[cache_key] = results
         return results
@@ -247,4 +253,85 @@ class SearchService:
             return out
         except Exception as e:
             logger.error("Brave images error: %s", e)
+            return []
+
+    @classmethod
+    def _search_tavily_web(
+        cls, query: str, num: int = 10, domain_filter: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """Query Tavily Search API endpoint."""
+        url = "https://api.tavily.com/search"
+        payload: Dict[str, Any] = {
+            "api_key": settings.tavily_api_key,
+            "query": query,
+            "search_depth": "basic",
+            "include_images": False,
+            "max_results": min(num, 10),
+        }
+        if domain_filter:
+            payload["include_domains"] = [domain_filter]
+
+        headers = {"Content-Type": "application/json"}
+        try:
+            resp = requests.post(
+                url, headers=headers, json=payload, timeout=settings.request_timeout
+            )
+            if resp.status_code != 200:
+                logger.warning("Tavily search returned HTTP %d: %s", resp.status_code, resp.text[:150])
+                return []
+            data = resp.json()
+            out = []
+            for item in data.get("results", []):
+                link = item.get("url", "")
+                if link and is_valid_url(link):
+                    out.append({
+                        "title": item.get("title", ""),
+                        "url": link,
+                        "snippet": item.get("content", ""),
+                        "domain": extract_domain(link),
+                        "source": "tavily_web",
+                    })
+            return out
+        except Exception as e:
+            logger.error("Tavily search error: %s", e)
+            return []
+
+    @classmethod
+    def _search_tavily_images(cls, query: str, num: int = 10) -> List[Dict[str, Any]]:
+        """Query Tavily Image Search via /search endpoint with include_images=True."""
+        url = "https://api.tavily.com/search"
+        payload = {
+            "api_key": settings.tavily_api_key,
+            "query": query,
+            "search_depth": "basic",
+            "include_images": True,
+            "max_results": min(num, 10),
+        }
+        headers = {"Content-Type": "application/json"}
+        try:
+            resp = requests.post(
+                url, headers=headers, json=payload, timeout=settings.request_timeout
+            )
+            if resp.status_code != 200:
+                logger.warning("Tavily image search returned HTTP %d: %s", resp.status_code, resp.text[:150])
+                return []
+            data = resp.json()
+            out = []
+            raw_images = data.get("images", [])
+            for item in raw_images:
+                img_url = item if isinstance(item, str) else item.get("url", "")
+                desc = item.get("description", "") if isinstance(item, dict) else ""
+                if img_url and is_valid_url(img_url):
+                    out.append({
+                        "image_url": img_url,
+                        "source_page": "",
+                        "title": desc or "Tavily product image",
+                        "width": None,
+                        "height": None,
+                        "domain": extract_domain(img_url),
+                        "source": "tavily_images",
+                    })
+            return out
+        except Exception as e:
+            logger.error("Tavily image search error: %s", e)
             return []

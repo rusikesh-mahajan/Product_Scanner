@@ -19,6 +19,7 @@ class Settings:
     upcitemdb_user_key: str = ""
     serper_api_key: str = ""
     brave_api_key: str = ""
+    tavily_api_key: str = ""
     mock_apis: bool = False
 
     # Request & Networking settings
@@ -76,6 +77,8 @@ class Settings:
             self.serper_api_key = os.getenv("SERPER_API_KEY", "")
         if not self.brave_api_key:
             self.brave_api_key = os.getenv("BRAVE_API_KEY", "")
+        if not self.tavily_api_key:
+            self.tavily_api_key = os.getenv("TAVILY_API_KEY", "")
         if not self.mock_apis:
             self.mock_apis = os.getenv("MOCK_APIS", "0") == "1"
 
@@ -96,8 +99,12 @@ class Settings:
         return bool(self.brave_api_key)
 
     @property
+    def has_tavily_key(self) -> bool:
+        return bool(self.tavily_api_key)
+
+    @property
     def has_any_search_key(self) -> bool:
-        return self.has_serper_key or self.has_brave_key
+        return self.has_serper_key or self.has_brave_key or self.has_tavily_key
 
 
 # Global settings instance

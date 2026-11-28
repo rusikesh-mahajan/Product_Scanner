@@ -511,8 +511,15 @@ with st.sidebar:
     if settings.has_brave_key:
         st.markdown("🟢 **Brave Search** *(Web & Image Search)*")
     else:
-        st.markdown("🔴 **Brave Search** *(No Key)*")
-        st.caption("Provide `BRAVE_API_KEY` or `SERPER_API_KEY` in `.env`.")
+        st.markdown("⚪ **Brave Search** *(Optional)*")
+
+    if settings.has_tavily_key:
+        st.markdown("🟢 **Tavily AI Search** *(Web & Image Search)*")
+    else:
+        st.markdown("⚪ **Tavily AI Search** *(Optional)*")
+
+    if not settings.has_any_search_key:
+        st.caption("Provide `SERPER_API_KEY`, `BRAVE_API_KEY`, or `TAVILY_API_KEY` in `.env`.")
 
     if settings.has_barcode_lookup_key:
         st.markdown("🟢 **Barcode Lookup** *(Active)*")

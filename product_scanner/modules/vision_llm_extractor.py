@@ -109,7 +109,7 @@ Important Instructions:
         cls, image: Any, api_key: Optional[str] = None
     ) -> Optional[TagFields]:
         """Call Gemini Vision LLM to extract tag fields directly."""
-        key = api_key or settings.gemini_api_key
+        key = settings.gemini_api_key if api_key is None else api_key
         if not key:
             logger.debug("No GEMINI_API_KEY provided; Vision LLM extraction skipped.")
             return None
