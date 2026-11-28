@@ -438,7 +438,8 @@ def execute_official_pipeline(
             extract_status = status
             logger.info("Candidate %s yielded no valid photography (%s); checking next...", cand_page.url, status)
 
-    pipeline_data["best_page"] = chosen_page or pages[0]
+    best_page = chosen_page or pages[0]
+    pipeline_data["best_page"] = best_page
     pipeline_data["extracted_images"] = extracted_images
     pipeline_data["page_metadata"] = page_meta
     pipeline_data["best_image"] = best_img
@@ -465,7 +466,7 @@ def execute_official_pipeline(
     score = ProductVerifier.verify(
         record=record,
         official_site=official_site,
-        page=chosen_page,
+        page=best_page,
         image=best_img,
         page_metadata=page_meta,
     )
