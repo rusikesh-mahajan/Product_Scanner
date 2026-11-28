@@ -503,20 +503,21 @@ with st.sidebar:
         st.markdown("🟡 **Gemini Vision LLM** *(No Key)*")
         st.caption("Add `GEMINI_API_KEY` in `.env` for Vision LLM extraction.")
 
-    if settings.has_serper_key:
-        st.markdown("🟢 **Serper.dev** *(Web & Image Search)*")
+    if settings.has_tavily_key:
+        st.markdown("🟢 **Tavily AI Search** *(Primary Search)*")
     else:
-        st.markdown("⚪ **Serper.dev** *(Optional)*")
+        st.markdown("🟡 **Tavily AI Search** *(Primary - No Key)*")
+        st.caption("Provide `TAVILY_API_KEY` in `.env` to enable Tavily.")
+
+    if settings.has_serper_key:
+        st.markdown("🟢 **Serper.dev** *(Fallback Google Search)*")
+    else:
+        st.markdown("⚪ **Serper.dev** *(Optional Fallback)*")
 
     if settings.has_brave_key:
-        st.markdown("🟢 **Brave Search** *(Web & Image Search)*")
+        st.markdown("🟢 **Brave Search** *(Fallback Web & Image Search)*")
     else:
-        st.markdown("⚪ **Brave Search** *(Optional)*")
-
-    if settings.has_tavily_key:
-        st.markdown("🟢 **Tavily AI Search** *(Web & Image Search)*")
-    else:
-        st.markdown("⚪ **Tavily AI Search** *(Optional)*")
+        st.markdown("⚪ **Brave Search** *(Optional Fallback)*")
 
     if not settings.has_any_search_key:
         st.caption("Provide `SERPER_API_KEY`, `BRAVE_API_KEY`, or `TAVILY_API_KEY` in `.env`.")

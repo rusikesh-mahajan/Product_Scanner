@@ -84,17 +84,17 @@ class SearchService:
 
         results: List[Dict[str, Any]] = []
 
-        # 1. Try Serper Web Search (if key provided)
-        if settings.has_serper_key:
+        # 1. Try Tavily AI Web Search (Primary)
+        if settings.has_tavily_key:
+            results = cls._search_tavily_web(query, num_results, domain_filter=domain_filter)
+
+        # 2. Try Serper Web Search (Secondary fallback)
+        if not results and settings.has_serper_key:
             results = cls._search_serper_web(query, num_results)
 
-        # 2. Try Brave Web Search (if no results or key not set)
+        # 3. Try Brave Web Search (Tertiary fallback)
         if not results and settings.has_brave_key:
             results = cls._search_brave_web(query, num_results)
-
-        # 3. Try Tavily Web Search (if no results or key not set)
-        if not results and settings.has_tavily_key:
-            results = cls._search_tavily_web(query, num_results, domain_filter=domain_filter)
 
         # Post-filter if domain_filter is requested
         if domain_filter:
@@ -179,12 +179,15 @@ class SearchService:
             return cls._search_cache[cache_key]
 
         results: List[Dict[str, Any]] = []
-        if settings.has_serper_key:
+        # 1. Try Tavily Image Search (Primary)
+        if settings.has_tavily_key:
+            results = cls._search_tavily_images(query, num_results)
+        # 2. Try Serper Image Search (Secondary fallback)
+        if not results and settings.has_serper_key:
             results = cls._search_serper_images(query, num_results)
+        # 3. Try Brave Image Search (Tertiary fallback)
         if not results and settings.has_brave_key:
             results = cls._search_brave_images(query, num_results)
-        if not results and settings.has_tavily_key:
-            results = cls._search_tavily_images(query, num_results)
 
         cls._search_cache[cache_key] = results
         return results
