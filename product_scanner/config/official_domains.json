@@ -38,5 +38,10 @@
     "brand": "Tommy Hilfiger",
     "verified_via": "curated_official_store",
     "timestamp": "2026-11-23T00:38:00"
+  },
+  "arvindfashions.com": {
+    "brand": "Arvind Fashions",
+    "verified_via": "web_search_validated",
+    "timestamp": "2026-11-28T09:27:59.817433"
   }
 }

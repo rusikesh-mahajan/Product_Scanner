@@ -42,6 +42,12 @@ htmlcov/
 nosetests.xml
 coverage.xml
 
+# Runtime history and downloads
+downloads/
+**/downloads/
+history/
+**/history/
+
 # Local environment & secrets
 .env
 *.env.local
